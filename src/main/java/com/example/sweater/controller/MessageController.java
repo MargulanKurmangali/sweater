@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.jdo.annotations.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
 @Controller
-public class MainController {
+public class MessageController {
   @Autowired
   private MessageRepo messageRepo;
 
@@ -33,11 +34,14 @@ public class MainController {
   }
 
   @GetMapping("/main")
+  @Transactional
   public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
-    Iterable<Message> messages;
+    Iterable<Message> messages = null;
+
 
     if (filter != null && !filter.isEmpty()) {
-      messages = messageRepo.findByTag(filter);
+      messageRepo.deleteByTag(filter);
+      //  messages = messageRepo.findByTag(filter);
     } else {
       messages = messageRepo.findAll();
     }
@@ -57,7 +61,7 @@ public class MainController {
     Map<String, Object> model) throws IOException {
     Message message = new Message(text, tag, user);
 
-    if (file != null&& !file.getOriginalFilename().isEmpty()) {
+    if (file != null && !file.getOriginalFilename().isEmpty()) {
 
       File uploadDir = new File(uploadPath);
 
@@ -76,6 +80,5 @@ public class MainController {
 
     return "main";
   }
-
 
 }
