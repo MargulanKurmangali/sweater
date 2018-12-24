@@ -20,57 +20,62 @@ import java.util.UUID;
 
 @Controller
 public class MainController {
-    @Autowired
-    private MessageRepo messageRepo;
-    @Value("${upload.path}")
-    private String upladPath;
-    @GetMapping("/")
-    public String greeting(Map<String, Object> model) {
-        return "greeting";
+  @Autowired
+  private MessageRepo messageRepo;
+
+  @Value("${upload.path}")
+  private String uploadPath;
+
+
+  @GetMapping("/")
+  public String greeting(Map<String, Object> model) {
+    return "greeting";
+  }
+
+  @GetMapping("/main")
+  public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
+    Iterable<Message> messages;
+
+    if (filter != null && !filter.isEmpty()) {
+      messages = messageRepo.findByTag(filter);
+    } else {
+      messages = messageRepo.findAll();
     }
 
-    @GetMapping("/main")
-    public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
-        Iterable<Message> messages = messageRepo.findAll();
+    model.addAttribute("messages", messages);
+    model.addAttribute("filter", filter);
 
-        if (filter != null && !filter.isEmpty()) {
-            messages = messageRepo.findByTag(filter);
-        } else {
-            messages = messageRepo.findAll();
-        }
+    return "main";
+  }
 
-        model.addAttribute("messages", messages);
-        model.addAttribute("filter", filter);
+  @PostMapping("/main")
+  public String add(
+    @AuthenticationPrincipal User user,
+    @RequestParam String text,
+    @RequestParam String tag,
+    @RequestParam("file") MultipartFile file,
+    Map<String, Object> model) throws IOException {
+    Message message = new Message(text, tag, user);
 
-        return "main";
+    if (file != null&& !file.getOriginalFilename().isEmpty()) {
+
+      File uploadDir = new File(uploadPath);
+
+      if (!uploadDir.exists()) {
+        uploadDir.mkdir();
+      }
+
+      String uuidFile = UUID.randomUUID().toString();
+      String resultFilename = uuidFile + "." + file.getOriginalFilename();
+      file.transferTo(new File(uploadPath + "/" + resultFilename));
+      message.setFilename(resultFilename);
     }
+    messageRepo.save(message);
+    Iterable<Message> messages = messageRepo.findAll();
+    model.put("messages", messages);
 
-    @PostMapping("/main")
-    public String add(
-            @AuthenticationPrincipal User user,
-            @RequestParam String text,
-            @RequestParam String tag, Map<String, Object> model,
-            @RequestParam("file") MultipartFile file
+    return "main";
+  }
 
-    ) throws IOException {
-        Message message = new Message(text, tag, user);
-        if(file!=null&&!file.getOriginalFilename().isEmpty()){
-            File uploadDir = new File(upladPath);
-            if(!uploadDir.exists()){
-                uploadDir.mkdir();
 
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFilename = uuidFile + "." + file.getOriginalFilename();
-            file.transferTo(new File(upladPath + "/" + resultFilename));
-            message.setFilename(resultFilename);
-        }
-        messageRepo.save(message);
-
-        Iterable<Message> messages = messageRepo.findAll();
-
-        model.put("messages", messages);
-
-        return "main";
-    }
 }

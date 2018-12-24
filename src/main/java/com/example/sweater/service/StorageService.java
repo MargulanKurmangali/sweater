@@ -1,4 +1,4 @@
-package com.example.sweater.service;
+package com.example.sweater.Service;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;

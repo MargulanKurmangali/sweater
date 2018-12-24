@@ -1,15 +1,13 @@
 package com.example.sweater.domain;
 
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Enumerated;
-
 public enum Role implements GrantedAuthority {
+  USER,ADMIN;
 
-    USER, ADMIN;
-
-    @Override
-    public String getAuthority() {
-        return name();
-    }
+  @Override
+  public String getAuthority() {
+    return name();
+  }
 }
