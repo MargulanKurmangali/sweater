@@ -1,4 +1,4 @@
-package com.example.sweater.Service;
+package com.example.sweater.repos;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
-public interface StorageService {
+public interface StorageRepo {
 
   void init();
 
