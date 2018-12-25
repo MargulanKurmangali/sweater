@@ -39,11 +39,16 @@
             <div class="m-2">
                 <span>${message.text}</span>
                 <i>${message.tag}</i>
+                <form method="get" action="/delete">
+                    <button type="submit" name="filter" value="${message.tag?if_exists}" class="btn btn-primary my-2">Delete</button>
+                </form>
             </div>
             <div class="card-footer text-muted">
                 ${message.authorName}
             </div>
+
         </div>
+
     <#else>
     No message
     </#list>

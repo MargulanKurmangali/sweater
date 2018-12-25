@@ -39,6 +39,12 @@ public class MessageController {
     return "main";
   }
 
+  @GetMapping("/delete")
+  public String delete(@RequestParam String filter) {
+    messageService.deleteMessage(filter);
+    return "redirect:/main";
+  }
+
   @PostMapping("/main")
   public String add(
     @AuthenticationPrincipal User user, @RequestParam String text, @RequestParam String tag,
