@@ -19,7 +19,7 @@ public class MessageService {
   MessageRepo messageRepo;
 
   public Iterable<Message> getMessage(String filter) {
-    Iterable<Message> messages = null;
+    Iterable<Message> messages;
 
     if (filter != null && !filter.isEmpty()) {
       messages = messageRepo.findByTag(filter);
@@ -30,18 +30,14 @@ public class MessageService {
     return messages;
   }
 
-  public Iterable<Message> deleteMessage(String filter) {
-    Iterable<Message> messages = null;
+  public void deleteMessage(String filter) {
     if (filter != null && !filter.isEmpty()) {
       messageRepo.deleteByTag(filter);
     }
-
-    return messages;
   }
 
   public Iterable<Message> addMessage(Message message, MultipartFile file, String uploadPath) throws IOException {
     if (file != null && !file.getOriginalFilename().isEmpty()) {
-
       File uploadDir = new File(uploadPath);
 
       if (!uploadDir.exists()) {
@@ -53,8 +49,8 @@ public class MessageService {
       file.transferTo(new File(uploadPath + "/" + resultFilename));
       message.setFilename(resultFilename);
     }
+
     messageRepo.save(message);
-    Iterable<Message> messages = messageRepo.findAll();
-    return messages;
+    return messageRepo.findAll();
   }
 }

@@ -15,32 +15,32 @@ import java.util.Map;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
 
-  @Autowired
-  UserService userService;
+    @Autowired
+    UserService userService;
 
-  @GetMapping
-  public String userList(Model model) {
-    userService.getUserList(model);
+    @GetMapping
+    public String userList(Model model) {
+        userService.getUserList(model);
 
-    return "userList";
-  }
+        return "userList";
+    }
 
-  @GetMapping("{user}")
-  public String userEditForm(@PathVariable User user, Model model) {
-    userService.editUserForm(user, model);
+    @GetMapping("{user}")
+    public String userEditForm(@PathVariable User user, Model model) {
+        userService.editUserForm(user, model);
 
-    return "userEdit";
-  }
+        return "userEdit";
+    }
 
-  @PostMapping
-  public String userSave(
-    @RequestParam String username,
-    @RequestParam Map<String, String> form,
-    @RequestParam("userId") User user) {
+    @PostMapping
+    public String userSave(
+            @RequestParam String username,
+            @RequestParam Map<String, String> form,
+            @RequestParam("userId") User user) {
 
-    userService.saveUser(username, form, user);
+        userService.saveUser(username, form, user);
 
-    return "redirect:/user";
-  }
+        return "redirect:/user";
+    }
 }
 

@@ -2,26 +2,43 @@ package com.example.sweater.controller;
 
 import com.example.sweater.domain.User;
 import com.example.sweater.service.RegistrationService;
+import com.example.sweater.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Map;
 
 @Controller
 public class RegistrationController {
-  @Autowired
-  RegistrationService registrationService;
+    @Autowired
+    RegistrationService registrationService;
 
-  @GetMapping("/registration")
-  public String registration() {
-    return "registration";
-  }
+    @Autowired
+    UserService userService;
 
-  @PostMapping("/registration")
-  public String addUser(User user, Map<String, Object> model) {
+    @GetMapping("/registration")
+    public String registration() {
+        return "registration";
+    }
 
-    return registrationService.addNewUser(user, model);
-  }
+    @PostMapping("/registration")
+    public String addUser(User user, Map<String, Object> model) {
+        return registrationService.addNewUser(user, model);
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activate(Model model, @PathVariable String code) {
+        boolean isActivate = userService.activateUser(code);
+        if (isActivate) {
+            model.addAttribute("message", "Your account successfully activated.");
+        } else {
+            model.addAttribute("message", "Something goes wrong.....");
+        }
+
+        return "login";
+    }
 }
