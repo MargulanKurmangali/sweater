@@ -31,6 +31,13 @@ public class RegistrationService {
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
 
+        sendActivationMessage(user);
+
+        userRepo.save(user);
+        return "redirect:/login";
+    }
+
+    public void sendActivationMessage(User user) {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
                     "Hello, %s! \n" + "Welcome to Sweater. \n" +
@@ -40,8 +47,5 @@ public class RegistrationService {
             );
             mailSenderService.send(user.getEmail(), "Activation code for Sweater", message);
         }
-
-        userRepo.save(user);
-        return "redirect:/login";
     }
 }

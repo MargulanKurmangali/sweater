@@ -53,7 +53,6 @@ public class MessageController {
                       Map<String, Object> model) throws IOException {
 
         Message message = new Message(text, tag, user);
-
         model.put("messages", messageService.addMessage(message, file, uploadPath));
 
         return "main";

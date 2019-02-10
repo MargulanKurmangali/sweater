@@ -20,6 +20,11 @@
             <li class="nav-item active">
                 <a class="nav-link" href="/main">Messages </a>
             </li>
+            <#if user??>
+            <li class="nav-item active">
+                <a class="nav-link" href="/user/profile">Profile </a>
+            </li>
+            </#if>
         </ul>
         <div class="navbar-text mr-4">${name}</div>
         <@l.logout/>

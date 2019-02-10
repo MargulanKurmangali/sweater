@@ -9,11 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +19,9 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    RegistrationService registrationService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -58,5 +59,26 @@ public class UserService implements UserDetailsService {
             return true;
         }
         return false;
+    }
+
+    public void editProfile(User user, String password, String email) {
+        String userEmail = user.getEmail();
+        String currentPassword = user.getPassword();
+        boolean isProfileChanged = (userEmail != null && !userEmail.equals(email) ||
+                currentPassword != null && !currentPassword.equals(password));
+        if (isProfileChanged) {
+            user.setEmail(email);
+            if (!StringUtils.isEmpty(email)) {
+                user.setActivationCode(UUID.randomUUID().toString());
+            }
+        }
+
+        if (!StringUtils.isEmpty(password)) {
+            user.setPassword(password);
+        }
+        userRepo.save(user);
+
+        if (isProfileChanged) registrationService.sendActivationMessage(user);
+
     }
 }
