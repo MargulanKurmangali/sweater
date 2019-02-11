@@ -60,7 +60,7 @@ public class UserController {
                               @RequestParam String email) {
         userService.editProfile(user,password,email);
 
-        return "redirect:/user/profile";
+        return "redirect:/logout";
     }
 }
 

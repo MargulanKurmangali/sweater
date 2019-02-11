@@ -27,7 +27,7 @@ public class RegistrationService {
             return "registration";
         }
 
-        user.setActive(true);
+        user.setActive(false);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
 

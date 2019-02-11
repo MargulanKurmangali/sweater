@@ -55,17 +55,20 @@ public class UserService implements UserDetailsService {
         User user = userRepo.findByActivationCode(code);
         if (Objects.nonNull(user)) {
             user.setActivationCode(null);
+            user.setActive(true);
             userRepo.save(user);
+
             return true;
         }
+
         return false;
     }
 
     public void editProfile(User user, String password, String email) {
         String userEmail = user.getEmail();
         String currentPassword = user.getPassword();
-        boolean isProfileChanged = (userEmail != null && !userEmail.equals(email) ||
-                currentPassword != null && !currentPassword.equals(password));
+        boolean isProfileChanged = (userEmail != null && !userEmail.equals(email)
+                || currentPassword != null && !currentPassword.equals(password));
         if (isProfileChanged) {
             user.setEmail(email);
             if (!StringUtils.isEmpty(email)) {
@@ -76,9 +79,11 @@ public class UserService implements UserDetailsService {
         if (!StringUtils.isEmpty(password)) {
             user.setPassword(password);
         }
+        if (isProfileChanged) {
+            registrationService.sendActivationMessage(user);
+            user.setActive(false);
+        }
+
         userRepo.save(user);
-
-        if (isProfileChanged) registrationService.sendActivationMessage(user);
-
     }
 }
