@@ -2,6 +2,7 @@ package com.example.sweater.controller;
 
 import com.example.sweater.domain.User;
 import com.example.sweater.service.UserService;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
+@NoArgsConstructor
 public class UserController {
 
     @Autowired

@@ -25,7 +25,12 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username);
+        User user = userRepo.findByUsername(username);
+        if(Objects.isNull(user)) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return user;
     }
 
     public void saveUser(String username, Map<String, String> form, User user) {

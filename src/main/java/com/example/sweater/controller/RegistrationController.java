@@ -6,11 +6,12 @@ import com.example.sweater.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Map;
+import javax.validation.Valid;
 
 @Controller
 public class RegistrationController {
@@ -26,8 +27,8 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(User user, Map<String, Object> model) {
-        return registrationService.addNewUser(user, model);
+    public String addUser(@Valid User user, BindingResult bindingResult, Model model) {
+        return registrationService.addNewUser(user, bindingResult, model);
     }
 
     @GetMapping("/activate/{code}")

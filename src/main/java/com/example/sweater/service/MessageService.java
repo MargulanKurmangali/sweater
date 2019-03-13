@@ -36,7 +36,7 @@ public class MessageService {
     }
   }
 
-  public Iterable<Message> addMessage(Message message, MultipartFile file, String uploadPath) throws IOException {
+  public void addMessage(Message message, MultipartFile file, String uploadPath) throws IOException {
     if (file != null && !file.getOriginalFilename().isEmpty()) {
       File uploadDir = new File(uploadPath);
 
@@ -51,6 +51,5 @@ public class MessageService {
     }
 
     messageRepo.save(message);
-    return messageRepo.findAll();
   }
 }
