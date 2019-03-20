@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
@@ -27,8 +28,11 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(@Valid User user, BindingResult bindingResult, Model model) {
-        return registrationService.addNewUser(user, bindingResult, model);
+    public String addUser(@RequestParam("password2") String passwordConfirm,
+                          @Valid User user,
+                          BindingResult bindingResult,
+                          Model model) throws InterruptedException {
+        return registrationService.addNewUser(passwordConfirm, user, bindingResult, model);
     }
 
     @GetMapping("/activate/{code}")
